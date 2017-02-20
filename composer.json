@@ -1,5 +1,5 @@
 {
-    "name": "gridonic/hapi",
+    "name": "djam90/hapi",
     "type": "library",
     "description": "PHP Wrapper Library for the Harvest API",
     "keywords": ["api", "harvest"],

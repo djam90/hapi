@@ -43,7 +43,7 @@ abstract class Harvest
      */
     public function __get($property)
     {
-        return $this->get( $property );
+        return $this->get($property);
     }
 
     /**
@@ -57,9 +57,9 @@ abstract class Harvest
         $value = null;
 
         if ($this->_convert) {
-            $property = str_replace( "_", "-", $property );
+            $property = str_replace("_", "-", $property);
         } else {
-            $property = str_replace( "-", "_", $property );
+            $property = str_replace("-", "_", $property);
         }
 
         if (array_key_exists($property, $this->_values)) {
@@ -67,7 +67,16 @@ abstract class Harvest
         } else {
             return null;
         }
+    }
 
+    /**
+     * Get all properties.
+     *
+     * @return array
+     */
+    public function getAll()
+    {
+        return $this->_values;
     }
 
     /**
@@ -80,7 +89,7 @@ abstract class Harvest
      */
     public function __set($property, $value)
     {
-        $this->set( $property, $value );
+        $this->set($property, $value);
     }
 
     /**
@@ -93,9 +102,9 @@ abstract class Harvest
     public function set($property, $value)
     {
         if ($this->_convert) {
-            $property = str_replace( "_", "-", $property );
+            $property = str_replace("_", "-", $property);
         } else {
-            $property = str_replace( "-", "_", $property );
+            $property = str_replace("-", "_", $property);
         }
 
         $this->_values[$property] = $value;
@@ -112,13 +121,13 @@ abstract class Harvest
      */
     public function __call($method, $arguments)
     {
-        if ( count($arguments) == 0 ) {
-            return $this->get( $method );
-        } elseif ( count( $arguments ) == 1 ) {
-            $this->set( $method, $arguments[0] );
+        if (count($arguments) == 0) {
+            return $this->get($method);
+        } elseif (count($arguments) == 1) {
+            $this->set($method, $arguments[0]);
         }
 
-        throw new HarvestException( sprintf('Unknown method %s::%s', get_class($this), $method));
+        throw new HarvestException(sprintf('Unknown method %s::%s', get_class($this), $method));
     }
 
     /**
@@ -131,7 +140,7 @@ abstract class Harvest
     {
         foreach ($node->childNodes as $item) {
             if ($item->nodeName != "#text") {
-                $this->set( $item->nodeName, $item->nodeValue);
+                $this->set($item->nodeName, $item->nodeValue);
             }
         }
 
@@ -154,7 +163,7 @@ abstract class Harvest
     protected function _xmlTags($tags)
     {
         $xml = '';
-        foreach($tags as $key => $value) {
+        foreach ($tags as $key => $value) {
             $xml .= "<$key>";
             if (is_array($value)) {
                 $xml .= $this->_xmlTags($value);
@@ -166,7 +175,8 @@ abstract class Harvest
         return $xml;
     }
 
-    public function __toString(){
+    public function __toString()
+    {
         return (string)$this->id;
     }
 }

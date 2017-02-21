@@ -93,9 +93,9 @@ class HarvestApi
 
     public function __construct($config)
     {
-        $this->setUser($config['username']);
-        $this->setPassword($config['password']);
-        $this->setAccount($config['account']);
+        $this->setUser($config->get('harvest.username'));
+        $this->setPassword($config->get('harvest.password'));
+        $this->setAccount($config->get('harvest.account'));
     }
 
     /**

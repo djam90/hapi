@@ -48,7 +48,7 @@ class HarvestServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($configPath, 'harvest');
 
         $this->app->singleton(
-            'Harvest',
+            HarvestApi::class,
             function ($app) {
                 return new HarvestApi($app['config']);
             }

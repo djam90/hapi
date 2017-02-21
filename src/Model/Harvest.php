@@ -1,9 +1,8 @@
 <?php
 
+namespace Djam90\Harvest\Model;
 
-namespace Harvest\Model;
-
-use Harvest\Exception\HarvestException;
+use Djam90\Harvest\Exception\HarvestException;
 
 /**
  * Abstract
@@ -143,7 +142,6 @@ abstract class Harvest
                 $this->set($item->nodeName, $item->nodeValue);
             }
         }
-
     }
 
     /**

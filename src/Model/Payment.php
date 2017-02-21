@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Harvest\Model;
+namespace Djam90\Harvest\Model;
 
 /**
  * Payment

@@ -1,6 +1,6 @@
 <?php
 
-namespace Harvest\Exception;
+namespace Djam90\Harvest\Exception;
 
 /**
  * Exception

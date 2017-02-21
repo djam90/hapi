@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Harvest\Model\Invoice;
+namespace Djam90\Harvest\Model\Invoice;
 
-use Harvest\Exception\HarvestException;
-use Harvest\Model\Range;
+use Djam90\Harvest\Model\Range;
+use Djam90\Harvest\Exception\HarvestException;
 
 /**
  * Filter

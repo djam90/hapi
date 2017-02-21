@@ -1,27 +1,27 @@
 <?php
 
-namespace Harvest;
+namespace Djam90\Harvest;
 
-use Harvest\Model\Client,
-    Harvest\Model\Contact,
-    Harvest\Model\DayEntry,
-    Harvest\Model\Expense,
-    Harvest\Model\ExpenseCategory,
-    Harvest\Model\Invoice,
-    Harvest\Model\InvoiceItemCategory,
-    Harvest\Model\InvoiceMessage,
-    Harvest\Model\Payment,
-    Harvest\Model\Project,
-    Harvest\Model\Result,
-    Harvest\Model\Task,
-    Harvest\Model\User,
-    Harvest\Model\UserAssignment,
-    Harvest\Model\TaskAssignment,
-    Harvest\Model\DailyActivity,
-    Harvest\Model\Timer,
-    Harvest\Model\Throttle,
-    Harvest\Model\Range;
-use Harvest\Model\Invoice\Filter;
+use Djam90\Harvest\Model\Client;
+use Djam90\Harvest\Model\Contact;
+use Djam90\Harvest\Model\DayEntry;
+use Djam90\Harvest\Model\Expense;
+use Djam90\Harvest\Model\ExpenseCategory;
+use Djam90\Harvest\Model\Invoice;
+use Djam90\Harvest\Model\InvoiceItemCategory;
+use Djam90\Harvest\Model\InvoiceMessage;
+use Djam90\Harvest\Model\Payment;
+use Djam90\Harvest\Model\Project;
+use Djam90\Harvest\Model\Result;
+use Djam90\Harvest\Model\Task;
+use Djam90\Harvest\Model\User;
+use Djam90\Harvest\Model\UserAssignment;
+use Djam90\Harvest\Model\TaskAssignment;
+use Djam90\Harvest\Model\DailyActivity;
+use Djam90\Harvest\Model\Timer;
+use Djam90\Harvest\Model\Throttle;
+use Djam90\Harvest\Model\Range;
+use Djam90\Harvest\Model\Invoice\Filter;
 
 /**
  * HarvestApi
@@ -49,8 +49,8 @@ use Harvest\Model\Invoice\Filter;
  * </code>
  *
  */
- class HarvestApi
- {
+class HarvestApi
+{
     /**
      *  WAIT
      */
@@ -90,6 +90,13 @@ use Harvest\Model\Invoice\Filter;
      * @var array Header Associated Array
      */
     protected $_headers;
+
+    public function __construct($config)
+    {
+        $this->setUser($config['username']);
+        $this->setPassword($config['password']);
+        $this->setAccount($config['account']);
+    }
 
     /**
      * set Harvest User Name
@@ -193,14 +200,14 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $day_of_year Day of Year
-     * @param  int    $year        Year
+     * @param  int $day_of_year Day of Year
+     * @param  int $year Year
      * @return Result
      */
     public function getDailyActivity($day_of_year = null, $year = null)
     {
         $url = "daily/";
-        if (! is_null($day_of_year) && ! is_null($year)) {
+        if (!is_null($day_of_year) && !is_null($year)) {
             $url .= $day_of_year . "/" . $year;
         }
 
@@ -262,29 +269,29 @@ use Harvest\Model\Invoice\Filter;
         return $this->performGet($url, false);
     }
 
-     /**
-      * create an entry
-      *
-      * <code>
-      * $entry = new DayEntry();
-      * $entry->set("notes", "Test Support");
-      * $entry->set("hours", 3);
-      * $entry->set("project_id", 3);
-      * $entry->set("task_id", 14);
-      * $entry->set("spent_at", "Tue, 17 Oct 2006");
-      *
-      * $api = new HarvestApi();
-      *
-      * $result = $api->createEntry($entry);
-      * if ($result->isSuccess()) {
-      *     $timer = $result->data;
-      * }
-      * </code>
-      *
-      * @param DayEntry $entry Day Entry
-      * @param bool $other_user
-      * @return Result
-      */
+    /**
+     * create an entry
+     *
+     * <code>
+     * $entry = new DayEntry();
+     * $entry->set("notes", "Test Support");
+     * $entry->set("hours", 3);
+     * $entry->set("project_id", 3);
+     * $entry->set("task_id", 14);
+     * $entry->set("spent_at", "Tue, 17 Oct 2006");
+     *
+     * $api = new HarvestApi();
+     *
+     * $result = $api->createEntry($entry);
+     * if ($result->isSuccess()) {
+     *     $timer = $result->data;
+     * }
+     * </code>
+     *
+     * @param DayEntry $entry Day Entry
+     * @param bool $other_user
+     * @return Result
+     */
     public function createEntry(DayEntry $entry, $other_user = true)
     {
         $url = "daily/add";
@@ -292,31 +299,31 @@ use Harvest\Model\Invoice\Filter;
         if ($other_user) {
             $url .= "?of_user=" . $entry->get("user-id");
         }
- 
+
         return $this->performPost($url, $entry->toXML(), false);
     }
 
-     /**
-      * creates an entry and starts its timer
-      *
-      * <code>
-      * $entry = new DayEntry();
-      * $entry->set("notes", "Test Support");
-      * $entry->set("project_id", 3);
-      * $entry->set("task_id", 14);
-      * $entry->set("spent_at", "Tue, 17 Oct 2006");
-      *
-      * $api = new HarvestApi();
-      *
-      * $result = $api->startNewTimer($entry);
-      * if ($result->isSuccess()) {
-      *     $timer = $result->data;
-      * }
-      * </code>
-      *
-      * @param DayEntry $entry Day Entry
-      * @return Result
-      */
+    /**
+     * creates an entry and starts its timer
+     *
+     * <code>
+     * $entry = new DayEntry();
+     * $entry->set("notes", "Test Support");
+     * $entry->set("project_id", 3);
+     * $entry->set("task_id", 14);
+     * $entry->set("spent_at", "Tue, 17 Oct 2006");
+     *
+     * $api = new HarvestApi();
+     *
+     * $result = $api->startNewTimer($entry);
+     * if ($result->isSuccess()) {
+     *     $timer = $result->data;
+     * }
+     * </code>
+     *
+     * @param DayEntry $entry Day Entry
+     * @return Result
+     */
     public function startNewTimer(DayEntry $entry)
     {
         $entry->set("hours", " ");
@@ -402,7 +409,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  mixed  $updated_since DateTime
+     * @param  mixed $updated_since DateTime
      * @return Result
      */
     public function getClients($updated_since = null)
@@ -425,7 +432,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $client_id Client Identifier
+     * @param  int $client_id Client Identifier
      * @return Result
      */
     public function getClient($client_id)
@@ -489,22 +496,22 @@ use Harvest\Model\Invoice\Filter;
         return $this->performPut($url, $client->toXML());
     }
 
-     /**
-      * activate / deactivate a client
-      *
-      * <code>
-      * $client_id = 11111;
-      * $api = new HarvestApi();
-      * $result = $api->toggleClient($client_id);
-      * if ($result->isSuccess()) {
-      *     // addtional logic
-      * }
-      * </code>
-      *
-      * @param string $client_id
-      * @return Result
-      * @internal param client_id $int Client Identifier
-      */
+    /**
+     * activate / deactivate a client
+     *
+     * <code>
+     * $client_id = 11111;
+     * $api = new HarvestApi();
+     * $result = $api->toggleClient($client_id);
+     * if ($result->isSuccess()) {
+     *     // addtional logic
+     * }
+     * </code>
+     *
+     * @param string $client_id
+     * @return Result
+     * @internal param client_id $int Client Identifier
+     */
     public function toggleClient($client_id)
     {
         $url = "clients/$client_id/toggle";
@@ -524,7 +531,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $client_id Client Identifier
+     * @param  int $client_id Client Identifier
      * @return Result
      */
     public function deleteClient($client_id)
@@ -549,7 +556,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  mixed  $updated_since DateTime
+     * @param  mixed $updated_since DateTime
      * @return Result
      */
     public function getContacts($updated_since = null)
@@ -572,7 +579,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $client_id Client Identifier
+     * @param  int $client_id Client Identifier
      * @return Result
      */
     public function getClientContacts($client_id)
@@ -594,7 +601,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $contact_id Contact Identifier
+     * @param  int $contact_id Contact Identifier
      * @return Result
      */
     public function getContact($contact_id)
@@ -660,23 +667,23 @@ use Harvest\Model\Invoice\Filter;
         return $this->performPut($url, $contact->toXML());
     }
 
-     /**
-      * delete a contact
-      *
-      * <code>
-      * $contact_id = 11111;
-      * $api = new HarvestApi();
-      *
-      * $result = $api->deleteContact($contact_id);
-      * if ($result->isSuccess()) {
-      *      // additional logic
-      * }
-      * </code>
-      *
-      * @param string $contact_id
-      * @return Result
-      * @internal param int $contact_Id Contact Identifier
-      */
+    /**
+     * delete a contact
+     *
+     * <code>
+     * $contact_id = 11111;
+     * $api = new HarvestApi();
+     *
+     * $result = $api->deleteContact($contact_id);
+     * if ($result->isSuccess()) {
+     *      // additional logic
+     * }
+     * </code>
+     *
+     * @param string $contact_id
+     * @return Result
+     * @internal param int $contact_Id Contact Identifier
+     */
     public function deleteContact($contact_id)
     {
         $url = "contacts/$contact_id";
@@ -700,7 +707,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  mixed  $updated_since DateTime
+     * @param  mixed $updated_since DateTime
      * @return Result
      */
     public function getProjects($updated_since = null)
@@ -722,7 +729,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $client_id Client Identifier
+     * @param  int $client_id Client Identifier
      * @return Result
      */
     public function getClientProjects($client_id)
@@ -745,7 +752,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id Project Identifier
+     * @param  int $project_id Project Identifier
      * @return Result
      */
     public function getProject($project_id)
@@ -822,7 +829,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id Project Identifier
+     * @param  int $project_id Project Identifier
      * @return Result
      */
     public function toggleProject($project_id)
@@ -845,7 +852,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id Project Identifier
+     * @param  int $project_id Project Identifier
      * @return Result
      */
     public function deleteProject($project_id)
@@ -893,7 +900,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $task_id Task Identifier
+     * @param  int $task_id Task Identifier
      * @return Result
      */
     public function getTask($task_id)
@@ -921,7 +928,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  Task   $task Task
+     * @param  Task $task Task
      * @return Result
      */
     public function createTask(Task $task)
@@ -948,7 +955,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  Task   $task Task
+     * @param  Task $task Task
      * @return Result
      */
     public function updateTask(Task $task)
@@ -971,7 +978,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $task_id Task Identifier
+     * @param  int $task_id Task Identifier
      * @return Result
      */
     public function deleteTask($task_id)
@@ -1019,7 +1026,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $user_id User Identifier
+     * @param  int $user_id User Identifier
      * @return Result
      */
     public function getUser($user_id)
@@ -1052,7 +1059,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  User   $user User
+     * @param  User $user User
      * @return Result
      */
     public function createUser(User $user)
@@ -1079,7 +1086,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  User   $user User
+     * @param  User $user User
      * @return Result
      */
     public function updateUser(User $user)
@@ -1102,7 +1109,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $user_id User Identifier
+     * @param  int $user_id User Identifier
      * @return Result
      */
     public function toggleUser($user_id)
@@ -1125,7 +1132,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $user_id User Identifier
+     * @param  int $user_id User Identifier
      * @return Result
      */
     public function resetUserPassword($user_id)
@@ -1148,7 +1155,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $user_id User Identifier
+     * @param  int $user_id User Identifier
      * @return Result
      */
     public function deleteUser($user_id)
@@ -1250,7 +1257,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $expense_category_id Expense Category Identifier
+     * @param  int $expense_category_id Expense Category Identifier
      * @return Result
      */
     public function deleteExpenseCategory($expense_category_id)
@@ -1277,7 +1284,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $expense_id Expense Identifier
+     * @param  int $expense_id Expense Identifier
      * @return Result
      */
     public function getExpense($expense_id)
@@ -1386,7 +1393,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $expense_id Expense Identifier
+     * @param  int $expense_id Expense Identifier
      * @return Result
      */
     public function deleteExpense($expense_id)
@@ -1465,7 +1472,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id Project Identifier
+     * @param  int $project_id Project Identifier
      * @return Result
      */
     public function getProjectUserAssignments($project_id)
@@ -1489,8 +1496,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int            $project_id         Project Identifier
-     * @param  int            $user_assignment_id User Assignment Identifier
+     * @param  int $project_id Project Identifier
+     * @param  int $user_assignment_id User Assignment Identifier
      * @return UserAssignment
      */
     public function getProjectUserAssignment($project_id, $user_assignment_id)
@@ -1516,8 +1523,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id Project Identifier
-     * @param  int    $user_id    User Identifier
+     * @param  int $project_id Project Identifier
+     * @param  int $user_id User Identifier
      * @return Result
      */
     public function assignUserToProject($project_id, $user_id)
@@ -1542,8 +1549,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id         Project Identifier
-     * @param  int    $user_assignment_id User Assignment Identifier
+     * @param  int $project_id Project Identifier
+     * @param  int $user_assignment_id User Assignment Identifier
      * @return Result
      */
     public function removeUserFromProject($project_id, $user_assignment_id)
@@ -1600,7 +1607,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id Project Identifier
+     * @param  int $project_id Project Identifier
      * @return Result
      */
     public function getProjectTaskAssignments($project_id)
@@ -1625,8 +1632,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id         Project Identifier
-     * @param  int    $task_assignment_id Task Assignment Identifier
+     * @param  int $project_id Project Identifier
+     * @param  int $task_assignment_id Task Assignment Identifier
      * @return Result
      */
     public function getProjectTaskAssignment($project_id, $task_assignment_id)
@@ -1652,8 +1659,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id Project Identifier
-     * @param  int    $task_id    Task Identifier
+     * @param  int $project_id Project Identifier
+     * @param  int $task_id Task Identifier
      * @return Result
      */
     public function assignTaskToProject($project_id, $task_id)
@@ -1680,8 +1687,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id Project Identifier
-     * @param  Task   $task       Task
+     * @param  int $project_id Project Identifier
+     * @param  Task $task Task
      * @return Result
      */
     public function createProjectTaskAssignment($project_id, Task $task)
@@ -1706,8 +1713,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id         Project Identifier
-     * @param  int    $task_assignment_id Task Assignment Identifier
+     * @param  int $project_id Project Identifier
+     * @param  int $task_assignment_id Task Assignment Identifier
      * @return Result
      */
     public function deleteProjectTaskAssignment($project_id, $task_assignment_id)
@@ -1765,15 +1772,15 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $project_id Project Identifier
-     * @param  Range  $range      Time Range
-     * @param  int    $user_id    User identifier optional
+     * @param  int $project_id Project Identifier
+     * @param  Range $range Time Range
+     * @param  int $user_id User identifier optional
      * @return Result
      */
     public function getProjectEntries($project_id, Range $range, $user_id = null)
     {
         $url = "projects/" . $project_id . "/entries?from=" . $range->from() . '&to=' . $range->to();
-        if (! is_null($user_id)) {
+        if (!is_null($user_id)) {
             $url .= "&user_id=" . $user_id;
         }
 
@@ -1796,15 +1803,15 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $user_id    User Identifier
-     * @param  Range  $range      Time Range
-     * @param  int    $project_id Project identifier optional
+     * @param  int $user_id User Identifier
+     * @param  Range $range Time Range
+     * @param  int $project_id Project identifier optional
      * @return Result
      */
     public function getUserEntries($user_id, Range $range, $project_id = null)
     {
         $url = "people/" . $user_id . "/entries?from=" . $range->from() . '&to=' . $range->to();
-        if (! is_null($project_id)) {
+        if (!is_null($project_id)) {
             $url .= "&project_id=" . $project_id;
         }
 
@@ -1826,8 +1833,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $user_id User Identifier
-     * @param  Range  $range   Time Range
+     * @param  int $user_id User Identifier
+     * @param  Range $range Time Range
      * @return Result
      */
     public function getUserExpenses($user_id, Range $range)
@@ -1862,7 +1869,7 @@ use Harvest\Model\Invoice\Filter;
     public function getInvoices(Filter $filter = null)
     {
         $url = "invoices";
-        if (! is_null($filter)) {
+        if (!is_null($filter)) {
             $url .= $filter->toURL();
         }
 
@@ -1883,7 +1890,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $invoice_id Invoice Identifier
+     * @param  int $invoice_id Invoice Identifier
      * @return Result
      */
     public function getInvoice($invoice_id)
@@ -1985,7 +1992,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $invoice_id Invoice Identifier
+     * @param  int $invoice_id Invoice Identifier
      * @return Result
      */
     public function closeInvoice($invoice_id)
@@ -2009,7 +2016,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $invoice_id Invoice Identifier
+     * @param  int $invoice_id Invoice Identifier
      * @return Result
      */
     public function markOffInvoice($invoice_id)
@@ -2035,7 +2042,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $invoice_id Invoice Identifier
+     * @param  int $invoice_id Invoice Identifier
      * @return Result
      */
     public function getInvoiceMessages($invoice_id)
@@ -2060,8 +2067,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $invoice_id Invoice Identifier
-     * @param  int    $message_id Message Identifier
+     * @param  int $invoice_id Invoice Identifier
+     * @param  int $message_id Message Identifier
      * @return Result
      */
     public function getInvoiceMessage($invoice_id, $message_id)
@@ -2090,8 +2097,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int            $invoice_id Invoice Identifier
-     * @param  InvoiceMessage $message    Invoice Message
+     * @param  int $invoice_id Invoice Identifier
+     * @param  InvoiceMessage $message Invoice Message
      * @return Result
      */
     public function sendInvoiceMessage($invoice_id, InvoiceMessage $message)
@@ -2116,8 +2123,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $invoice_id Invoice Identifier
-     * @param  int    $message_id Invoice Message Identifier
+     * @param  int $invoice_id Invoice Identifier
+     * @param  int $message_id Invoice Message Identifier
      * @return Result
      */
     public function deleteInvoiceMessage($invoice_id, $message_id)
@@ -2145,8 +2152,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int            $invoice_id Invoice Identifier
-     * @param  InvoiceMessage $message    Invoice Message
+     * @param  int $invoice_id Invoice Identifier
+     * @param  InvoiceMessage $message Invoice Message
      * @return Result
      */
     public function createSentInvoiceMessage($invoice_id, InvoiceMessage $message)
@@ -2174,8 +2181,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int            $invoice_id Invoice Identifier
-     * @param  InvoiceMessage $message    Invoice Message
+     * @param  int $invoice_id Invoice Identifier
+     * @param  InvoiceMessage $message Invoice Message
      * @return Result
      */
     public function createClosedInvoiceMessage($invoice_id, InvoiceMessage $message)
@@ -2203,8 +2210,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int            $invoice_id Invoice Identifier
-     * @param  InvoiceMessage $message    Invoice Message
+     * @param  int $invoice_id Invoice Identifier
+     * @param  InvoiceMessage $message Invoice Message
      * @return Result
      */
     public function createReOpenInvoiceMessage($invoice_id, InvoiceMessage $message)
@@ -2232,8 +2239,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int            $invoice_id Invoice Identifier
-     * @param  InvoiceMessage $message    Invoice Message
+     * @param  int $invoice_id Invoice Identifier
+     * @param  InvoiceMessage $message Invoice Message
      * @return Result
      */
     public function createMarkAsDraftInvoiceMessage($invoice_id, InvoiceMessage $message)
@@ -2260,7 +2267,7 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $invoice_id Invoice Identifier
+     * @param  int $invoice_id Invoice Identifier
      * @return Result
      */
     public function getInvoicePayments($invoice_id)
@@ -2285,8 +2292,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $invoice_id Invoice Identifier
-     * @param  int    $payment_id Payment Identifier
+     * @param  int $invoice_id Invoice Identifier
+     * @param  int $payment_id Payment Identifier
      * @return Result
      */
     public function getInvoicePayment($invoice_id, $payment_id)
@@ -2313,8 +2320,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int     $invoice_id Invoice Identifier
-     * @param  Payment $payment    Payment
+     * @param  int $invoice_id Invoice Identifier
+     * @param  Payment $payment Payment
      * @return Result
      */
     public function createInvoicePayment($invoice_id, Payment $payment)
@@ -2339,8 +2346,8 @@ use Harvest\Model\Invoice\Filter;
      * }
      * </code>
      *
-     * @param  int    $invoice_id Invoice Identifier
-     * @param  int    $payment_id Payment Identifier
+     * @param  int $invoice_id Invoice Identifier
+     * @param  int $payment_id Payment Identifier
      * @return Result
      */
     public function deleteInvoicePayment($invoice_id, $payment_id)
@@ -2455,12 +2462,12 @@ use Harvest\Model\Invoice\Filter;
     /*----------------- API Access & Parse Methods -----------------*/
     /*--------------------------------------------------------------*/
 
-     /**
-      * generate the update_since query params
-      * @param \DateTime $updated_since
-      * @return string
-      * @internal param mixed $update_since DateTime
-      */
+    /**
+     * generate the update_since query params
+     * @param \DateTime $updated_since
+     * @return string
+     * @internal param mixed $update_since DateTime
+     */
     public function appendUpdatedSinceParam($updated_since = null)
     {
         if (is_null($updated_since)) {
@@ -2474,8 +2481,8 @@ use Harvest\Model\Invoice\Filter;
 
     /**
      * perform http get command
-     * @param  string $url   url of server to process request
-     * @param  mixed  $multi Flag to specify if multiple items are returned by request
+     * @param  string $url url of server to process request
+     * @param  mixed $multi Flag to specify if multiple items are returned by request
      * @return Result
      */
     protected function performGet($url, $multi = true)
@@ -2483,7 +2490,7 @@ use Harvest\Model\Invoice\Filter;
         $data = null;
         $code = null;
         $success = false;
-        while (! $success) {
+        while (!$success) {
             $ch = $this->generateCurl($url);
             $data = curl_exec($ch);
             $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -2520,15 +2527,15 @@ use Harvest\Model\Invoice\Filter;
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('User-Agent: PHP Wrapper Library for Harvest API', 'Accept: application/xml', 'Content-Type: application/xml', 'Authorization: Basic (' . base64_encode($this->_user . ":" . $this->_password). ')'));
-        curl_setopt($ch, CURLOPT_HEADERFUNCTION, array(&$this,'parseHeader'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('User-Agent: PHP Wrapper Library for Harvest API', 'Accept: application/xml', 'Content-Type: application/xml', 'Authorization: Basic (' . base64_encode($this->_user . ":" . $this->_password) . ')'));
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION, array(&$this, 'parseHeader'));
 
         return $ch;
     }
 
     /**
      * perform http put command
-     * @param  string $url  url of server to process request
+     * @param  string $url url of server to process request
      * @param  string $data data to be sent
      * @return Result
      */
@@ -2537,7 +2544,7 @@ use Harvest\Model\Invoice\Filter;
         $rData = null;
         $code = null;
         $success = false;
-        while (! $success) {
+        while (!$success) {
             $ch = $this->generatePutCurl($url, $data);
             $rData = curl_exec($ch);
             $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -2552,12 +2559,12 @@ use Harvest\Model\Invoice\Filter;
         return new Result($code, $rData, $this->_headers);
     }
 
-     /**
-      * generate cURL put request
-      * @param $url
-      * @param $data
-      * @return resource
-      */
+    /**
+     * generate cURL put request
+     * @param $url
+     * @param $data
+     * @return resource
+     */
     protected function generatePutCurl($url, $data)
     {
         $ch = $this->generateCurl($url);
@@ -2567,19 +2574,19 @@ use Harvest\Model\Invoice\Filter;
         return $ch;
     }
 
-     /**
-      * perform http post command
-      * @param  string $url url of server to process request
-      * @param  string $data data to be sent
-      * @param string $multi
-      * @return Result
-      */
+    /**
+     * perform http post command
+     * @param  string $url url of server to process request
+     * @param  string $data data to be sent
+     * @param string $multi
+     * @return Result
+     */
     protected function performPost($url, $data, $multi = "id")
     {
         $rData = null;
         $code = null;
         $success = false;
-        while (! $success) {
+        while (!$success) {
             $ch = $this->generatePostCurl($url, $data);
             $rData = curl_exec($ch);
             $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -2630,7 +2637,7 @@ use Harvest\Model\Invoice\Filter;
         $data = null;
         $code = null;
         $success = false;
-        while (! $success) {
+        while (!$success) {
             $ch = $this->generateDeleteCurl($url);
             $data = curl_exec($ch);
             $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -2661,8 +2668,8 @@ use Harvest\Model\Invoice\Filter;
     /**
      * perform http post of MultiPart Form-Data
      *
-     * @param  string $url  url of server to process request
-     * @param  array  $data Associated Aray of form data
+     * @param  string $url url of server to process request
+     * @param  array $data Associated Aray of form data
      * @return Result
      */
     protected function performMultiPart($url, $data)
@@ -2670,7 +2677,7 @@ use Harvest\Model\Invoice\Filter;
         $rData = null;
         $code = null;
         $success = false;
-        while (! $success) {
+        while (!$success) {
             $ch = $this->generateMultiPartCurl($url, $data);
             $rData = curl_exec($ch);
             $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -2696,7 +2703,7 @@ use Harvest\Model\Invoice\Filter;
         $ch = $this->generateCurl($url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('User-Agent: PHP Wrapper Library for Harvest API', 'Accept: application/xml', 'Content-Type: multipart/form-data', 'Authorization: Basic (' . base64_encode($this->_user . ":" . $this->_password). ')'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('User-Agent: PHP Wrapper Library for Harvest API', 'Accept: application/xml', 'Content-Type: multipart/form-data', 'Authorization: Basic (' . base64_encode($this->_user . ":" . $this->_password) . ')'));
 
         return $ch;
     }
@@ -2714,7 +2721,7 @@ use Harvest\Model\Invoice\Filter;
         $x = $xmlDoc->documentElement;
         foreach ($x->childNodes AS $item) {
             $item = $this->parseNode($item);
-            if (! is_null($item)) {
+            if (!is_null($item)) {
                 $items[$item->id()] = $item;
             }
         }
@@ -2747,13 +2754,13 @@ use Harvest\Model\Invoice\Filter;
         switch ($node->nodeName) {
             case "expense-category":
                 $item = new ExpenseCategory();
-            break;
+                break;
             case "client":
                 $item = new Client();
-            break;
+                break;
             case "contact":
                 $item = new Contact();
-            break;
+                break;
             case "add":
                 $children = $node->childNodes;
                 foreach ($children as $child) {
@@ -2765,50 +2772,50 @@ use Harvest\Model\Invoice\Filter;
             case "day_entry":
             case "day-entry":
                 $item = new DayEntry();
-            break;
+                break;
             case "expense":
                 $item = new Expense();
-            break;
+                break;
             case "invoice":
                 $item = new Invoice();
-            break;
+                break;
             case "invoice-item-category":
                 $item = new InvoiceItemCategory();
-            break;
+                break;
             case "invoice-message":
                 $item = new InvoiceMessage();
-            break;
+                break;
             case "payment":
                 $item = new Payment();
-            break;
+                break;
             case "project":
                 $item = new Project();
-            break;
+                break;
             case "task":
                 $item = new Task();
-            break;
+                break;
             case "user":
                 $item = new User();
-            break;
+                break;
             case "user-assignment":
                 $item = new UserAssignment();
-            break;
+                break;
             case "task-assignment":
                 $item = new TaskAssignment();
-            break;
+                break;
             case "daily":
                 $item = new DailyActivity();
-            break;
+                break;
             case "timer":
                 $item = new Timer();
-            break;
+                break;
             case "hash":
                 $item = new Throttle();
-            break;
+                break;
             default:
-            break;
+                break;
         }
-        if (! is_null($item)) {
+        if (!is_null($item)) {
             $item->parseXml($node);
         }
 
@@ -2817,11 +2824,11 @@ use Harvest\Model\Invoice\Filter;
 
     /**
      * parse cURL Header text
-     * @param  cURL-Handle $ch     cURL Handle
-     * @param  string      $header Header line text to be parsed
+     * @param  cURL -Handle $ch     cURL Handle
+     * @param  string $header Header line text to be parsed
      * @return int
      */
-    protected function parseHeader($ch,$header)
+    protected function parseHeader($ch, $header)
     {
         $pos = strpos($header, ":");
         $key = substr($header, 0, $pos);
@@ -2844,18 +2851,18 @@ use Harvest\Model\Invoice\Filter;
         $this->_headers = array();
     }
 
-     /**
-      * simple autoload function
-      * returns true if the class was loaded, otherwise false
-      *
-      * <code>
-      * // register the class auto loader
-      * spl_autoload_register(array('HarvestApi', 'autoload'));
-      * </code>
-      *
-      * @param string $className Name of Class to be loaded
-      * @return bool
-      */
+    /**
+     * simple autoload function
+     * returns true if the class was loaded, otherwise false
+     *
+     * <code>
+     * // register the class auto loader
+     * spl_autoload_register(array('HarvestApi', 'autoload'));
+     * </code>
+     *
+     * @param string $className Name of Class to be loaded
+     * @return bool
+     */
     public static function autoload($className)
     {
         if (class_exists($className, false) || interface_exists($className, false)) {
@@ -2883,7 +2890,7 @@ use Harvest\Model\Invoice\Filter;
      */
     public static function getPath()
     {
-        if (! self::$_path) {
+        if (!self::$_path) {
             self::$_path = dirname(__FILE__);
         }
 

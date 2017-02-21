@@ -63,6 +63,6 @@ class HarvestServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [];
+        return [HarvestApi::class];
     }
 }

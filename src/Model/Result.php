@@ -1,9 +1,9 @@
 <?php
 
-
 namespace Djam90\Harvest\Model;
 
-use Harvest\Exception\HarvestException;
+use Illuminate\Support\Collection;
+use Djam90\Harvest\Exception\HarvestException;
 
 /**
  * Result
@@ -56,9 +56,9 @@ class Result
     /**
      * Constructor initializes {@link $_code} {@link $_data}
      *
-     * @param string $code    response code
-     * @param array  $data    array of Quote Objects
-     * @param array  $headers array of Header Response values
+     * @param string $code response code
+     * @param array $data array of Quote Objects
+     * @param array $headers array of Header Response values
      */
     public function __construct($code = null, $data = null, $headers = null)
     {
@@ -76,7 +76,7 @@ class Result
      */
     public function __get($property)
     {
-        return $this->get( $property);
+        return $this->get($property);
     }
 
     /**
@@ -91,20 +91,20 @@ class Result
         switch ($property) {
             case 'code':
                 return $this->_code;
-            break;
+                break;
             case 'data':
                 return $this->_data;
-            break;
+                break;
             case 'headers':
                 return $this->_headers;
-            break;
+                break;
             default:
-                if ( $this->_headers != null && array_key_exists($property, $this->_headers) ) {
+                if ($this->_headers != null && array_key_exists($property, $this->_headers)) {
                     return $this->_headers[$property];
                 } else {
                     throw new HarvestException(sprintf('Unknown property %s::%s', get_class($this), $property));
                 }
-            break;
+                break;
         }
     }
 
@@ -118,7 +118,7 @@ class Result
      */
     public function __set($property, $value)
     {
-        $this->set( $property, $value );
+        $this->set($property, $value);
     }
 
     /**
@@ -133,16 +133,16 @@ class Result
         switch ($property) {
             case 'code':
                 $this->_code = $value;
-            break;
+                break;
             case 'data':
                 $this->_data = $value;
-            break;
+                break;
             case 'headers':
                 $this->_headers = $value;
-            break;
+                break;
             default:
                 throw new HarvestException(sprintf('Unknown property %s::%s', get_class($this), $property));
-            break;
+                break;
         }
     }
 
@@ -152,11 +152,15 @@ class Result
      */
     public function isSuccess()
     {
-        if ( "2" == substr( $this->_code, 0, 1 ) ) {
+        if ("2" == substr($this->_code, 0, 1)) {
             return true;
         } else {
             return false;
         }
     }
 
+    public function collection()
+    {
+        return new Collection($this->_data);
+    }
 }

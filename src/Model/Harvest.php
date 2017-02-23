@@ -107,6 +107,7 @@ abstract class Harvest
         }
 
         $this->_values[$property] = $value;
+        $this->{$property} = $value;
     }
 
     /**

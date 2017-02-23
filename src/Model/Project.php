@@ -87,6 +87,7 @@ class Project extends Harvest
             $this->_tasks = $value;
         } else {
             $this->_values[$property] = $value;
+            $this->{$property} = $value;
         }
     }
 

@@ -1777,12 +1777,13 @@ class HarvestApi
      * @param  int $user_id User identifier optional
      * @return Result
      */
-    public function getProjectEntries($project_id, Range $range, $user_id = null)
+    public function getProjectEntries($project_id, Range $range, $user_id = null, $billable = true)
     {
         $url = "projects/" . $project_id . "/entries?from=" . $range->from() . '&to=' . $range->to();
         if (!is_null($user_id)) {
             $url .= "&user_id=" . $user_id;
         }
+        $url .= "&billable=" . ($billable ? "yes" : "no");
 
         return $this->performGet($url, true);
     }

@@ -16,7 +16,7 @@ use Djam90\Harvest\Exception\HarvestException;
  *
  * @property mixed id
  */
-abstract class Harvest
+abstract class Harvest implements \ArrayAccess
 {
     /**
      * @var string Document Element Name
@@ -177,5 +177,26 @@ abstract class Harvest
     public function __toString()
     {
         return (string)$this->id;
+    }
+
+    public function offsetExists($offset)
+    {
+        return property_exists($this, $offset);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->$offset;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        $this->set($offset, $value);
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->$offset);
+        unset($this->_values[$offset]);
     }
 }
